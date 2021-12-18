@@ -4,6 +4,11 @@ const router = express.Router()
 const questionModel = require('../models/question.model')
 const answerModel = require('../models/answer.model')
 
+router.get('/', async (req, res)=>{
+    const questions = await questionModel.find().sort({ createdAt: 'desc' })
+    res.render('index', {questions:questions})
+})
+
 router.post('/new', (req, res)=>{
     const question = new questionModel (
         {
@@ -24,7 +29,7 @@ router.post('/new', (req, res)=>{
 
 router.get('/:id', async (req, res)=>{
     const question = await questionModel.findById(req.params.id)
-    res.send(question)
+    res.render('question', {question:question})
 })
 
 router.post('/:id/answer', async (req, res)=>{
@@ -37,11 +42,6 @@ router.post('/:id/answer', async (req, res)=>{
     question.answers.push(answer)
     question.save()
     res.send(question)
-})
-
-router.get('/', async (req, res)=>{
-    const questions = await questionModel.find().sort({ createdAt: 'desc' })
-    res.render('index', {questions:questions})
 })
 
 module.exports = router

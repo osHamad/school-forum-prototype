@@ -8,12 +8,9 @@
     <title>Document</title>
 </head>
 <body>
-    <% questions.forEach(question => { %>
-        <h1><%=question.title%></h1>
-        <h4><%=question.details%></h4>
-        <h4><%=question.category%></h4>
-        <a href="/questions/<%=question._id%>">button</a>
-        <hr>
-      <% }) %>
+    <h1><%=question.title%></h1>
+    <h3><%=question.category%></h3>
+    <hr>
+    <p><%=question.details%></p>
 </body>
 </html>
