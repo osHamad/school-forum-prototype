@@ -8,6 +8,11 @@
     <title>Document</title>
 </head>
 <body>
-    hello world
+    <% questions.forEach(question => { %>
+        <h1><%=question.title%></h1>
+        <h4><%=question.details%></h4>
+        <h4><%=question.category%></h4>
+        <hr>
+      <% }) %>
 </body>
 </html>
