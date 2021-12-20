@@ -12,5 +12,29 @@
     <h3><%=question.category%></h3>
     <hr>
     <p><%=question.details%></p>
+    <hr>
+    <h1>put answer here</h1>
+
+
+    <p>input answer</p>
+    <input type="text" id="title-f">
+    <button onclick="postData()">submit answer</button>
+
+    <hr>
+    <% question.answers.forEach(question => { %>
+        <h1><%=question.title%></h1>
+        <hr>
+      <% }) %>
+
+    <script>
+        function postData(url = window.location.pathname + '/answer'){
+            const data = {title: document.getElementById('title-f').value}
+            fetch(url, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            })
+        }
+    </script>
 </body>
 </html>

@@ -41,7 +41,6 @@ router.post('/:id/answer', async (req, res)=>{
     )
     question.answers.push(answer)
     question.save()
-    res.send(question)
 })
 
 module.exports = router
