@@ -4,16 +4,51 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="css/styles.css" rel="stylesheet" />
+    <link href="http://localhost:5000/css/styles.css" rel="stylesheet" />
     <title>Document</title>
 </head>
 <body>
+    <h1>Ask a question</h1>
+    <p>input question</p>
+    <input type="text" id="title-f">
+    <p>input details</p>
+    <textarea id="details-f"></textarea>
+    <p>input category</p>
+    <select name="categories" id="category-f">
+        <option value="phys">phys</option>
+        <option value="chem">chem</option>
+        <option value="bio">bio</option>
+        <option value="math">math</option>
+        <option value="science">science</option>
+    </select>
+    <button onclick="postData()">submit answer</button>
+    
     <% questions.forEach(question => { %>
         <h1><%=question.title%></h1>
         <h4><%=question.details%></h4>
         <h4><%=question.category%></h4>
         <a href="/questions/<%=question._id%>">button</a>
         <hr>
-      <% }) %>
+    <% }) %>
+
+    <script>
+        function postData(url = window.location.pathname + '/new'){
+            console.log(
+                document.getElementById('title-f').value,
+                document.getElementById('details-f').value,
+                document.getElementById('category-f').value
+            )
+            const data = {
+                title: document.getElementById('title-f').value,
+                details: document.getElementById('details-f').value,
+                category: document.getElementById('category-f').value
+            }
+            fetch(url, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            })
+        }
+    </script>
 </body>
 </html>
