@@ -15,7 +15,8 @@ const userSchema = new schema (
             email:
             {
                 type: String,
-                required: true
+                required: true,
+                unique: true
             },
 
             password:
@@ -34,6 +35,12 @@ const userSchema = new schema (
             {
                 type: String,
                 default: 'user'
+            },
+
+            dateCreated:
+            {
+                type: Date,
+                required: true
             }
         },
 
