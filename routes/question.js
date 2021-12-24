@@ -2,13 +2,22 @@ const express = require('express')
 const router = express.Router()
 
 const questionModel = require('../models/question.model')
-const answerModel = require('../models/answer.model')
 
+// GET requests
+// get all questions
 router.get('/', async (req, res)=>{
     const questions = await questionModel.find().sort({ createdAt: 'desc' })
     res.render('index', {questions:questions})
 })
 
+// get one specific question by id
+router.get('/:id', async (req, res)=>{
+    const question = await questionModel.findById(req.params.id)
+    res.render('question', {question:question})
+})
+
+// POST requests
+// create a new question
 router.post('/new', (req, res)=>{
     const question = new questionModel (
         {
@@ -27,20 +36,14 @@ router.post('/new', (req, res)=>{
     })
 })
 
-router.get('/:id', async (req, res)=>{
-    const question = await questionModel.findById(req.params.id)
-    res.render('question', {question:question})
+// edit question
+router.post('/:id/edit', (req, res)=>{
+
 })
 
-router.post('/:id/answer', async (req, res)=>{
-    let question = await questionModel.findById(req.params.id)
-    const answer = new answerModel(
-        {
-            title: req.body.title
-        }
-    )
-    question.answers.push(answer)
-    question.save()
+// delete question
+router.post('/:id/delete', (req, res)=>{
+    
 })
 
 module.exports = router
