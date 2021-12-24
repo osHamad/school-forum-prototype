@@ -1,30 +1,53 @@
+// require dependencies
 const express = require('express')
-const app = express()
 const mongoose = require('mongoose')
-const questionModel = require('./models/question.model')
-const questionRouter = require('./routes/question')
 
+// require routes for making requests
+const questionRouter = require('./routes/question')
+const answerRouter = require('./routes/answer')
+const userRouter = require('./routes/user')
+
+// configure env and setup env variables
 require('dotenv').config()
 const PORT = process.env.PORT
 const URI = process.env.URI
 
+// create app
+const app = express()
+
+// setup view engine
 app.set('view engine', 'ejs')
 app.set('views', __dirname+'/views')
-app.use(express.static(__dirname + '/static'))
-app.use(express.json())
-app.use('/questions', questionRouter)
 
+// application usages
+app.use(express.static(__dirname + '/static'))      // allow static files for views
+app.use(express.json())     // middleware to parse json
+app.use(express.urlencoded({extended: true}))
+
+// use routes to make requests
+app.use('/questions', questionRouter)
+app.use('/answer', answerRouter)
+app.use('/user', userRouter)
+
+// request for homepage
 app.get('/', async (req, res)=>{
     res.send('this is the main page')
 })
 
-mongoose.connect(URI, (err)=>{
-    if (err){
-        console.log('error occured:', err)
-        return
-    }
-    console.log('connected to db')
-    app.listen(PORT, ()=>{
-        console.log('listening on port', PORT)
-    })
+// request for any page that does not exist (404 error)
+app.get('*', async (req, res)=>{
+    res.send('page does not exist')
 })
+
+// connect to db then listen on port
+mongoose.connect(URI)
+    .then(()=>{
+        console.log('connected to db')
+        // listen to port
+        app.listen(PORT, ()=>{
+            console.log('listening on port', PORT)
+        })
+    })
+    .catch((e)=>{
+        console.log('error occured:', e)
+    })
