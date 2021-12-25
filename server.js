@@ -47,7 +47,7 @@ app.use('/user', userRouter)
 
 // request for homepage
 app.get('/', async (req, res)=>{
-    res.send('this is the main page')
+    res.redirect('/questions')
 })
 
 // request for any page that does not exist (404 error)

@@ -20,7 +20,7 @@ router.get('/login', (req, res) => {
 // get all users
 router.get('/leaderboard', async (req, res) => {
     const allUsers = await userModel.find()
-    //res.send(allUsers)
+    res.send(allUsers)
 })
 
 // view specific user profile
