@@ -8,23 +8,29 @@
     <title>Document</title>
 </head>
 <body>
-    <h1><%=question.title%></h1>
-    <h3><%=question.category%></h3>
+    <h1><%=question.questionBody.title%></h1>
+    <h3><%=question.questionBody.category%></h3>
     <hr>
-    <p><%=question.details%></p>
+    <p><%=question.questionBody.details%></p>
     <hr>
+    <% answers.forEach(answer => { %>
+        <h1><%=answer.userInfo.userName%></h1>
+        <h4><%=answer.answerBody.details%></h4>
+        <h4><%=answer.answerInfo.dateAnswered%></h4>
+        <hr>
+    <% }) %>
+
     <h1>put answer here</h1>
 
 
-    <p>input answer</p>
-    <input type="text" id="title-f">
-    <button onclick="postData()">submit answer</button>
+    <form action="/answer/<%=question._id%>" method="POST">
+        <p>insert answer here</p>
+        <input type="text" name="details" id="details">
+        <button type="submit">submit answer</button>
+    </form>
 
     <hr>
-    <% question.answers.forEach(question => { %>
-        <h1><%=question.title%></h1>
-        <hr>
-      <% }) %>
+    
 
     <script>
         function postData(url = window.location.pathname + '/answer'){

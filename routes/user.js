@@ -1,7 +1,6 @@
 // require dependencies
 const express = require('express')
 const bcrypt = require('bcrypt')
-const session = require('express-session')
 
 // require mongoose schema models
 const userModel = require('../models/user.model')
@@ -12,24 +11,6 @@ const { isLoggedIn } = require('../helpers/middleware')
 // create router
 const router = express.Router()
 
-// configure environment variables
-require('dotenv').config()
-const SESSION_SECRET = process.env.SESSION_SECRET
-
-// initialize session for user
-router.use(session(
-    {
-        name: 'auth',
-        secret: SESSION_SECRET,
-        resave: false,
-        saveUninitialized: false,
-        cookie: 
-        {
-            // specify cookie options
-        }
-    }
-))
-
 // GET requests
 // get user login/register page
 router.get('/login', (req, res) => {
@@ -37,16 +18,27 @@ router.get('/login', (req, res) => {
 })
 
 // get all users
-router.get('/', async (req, res) => {
+router.get('/leaderboard', async (req, res) => {
     const allUsers = await userModel.find()
-    res.send(allUsers)
+    //res.send(allUsers)
 })
 
 // view specific user profile
 router.get('/profile/:user', async (req, res) => {
     user = await userModel.findById(req.params.user)
     if (!user) return res.send('user does not exist')
-    res.json(user)
+    const info = {
+        name:user.userInfo.name,
+        grade:user.userInfo.grade,
+        dateJoined:user.userInfo.dateCreated,
+    }
+    const stats = {
+        points:user.userStats.points,
+        asked:user.userStats.asked,
+        answered:user.userStats.answered,
+        verified:user.userStats.verified
+    }
+    res.render('profile', {info:info, stats:stats})
 })
 
 // view specific user profile
@@ -119,8 +111,8 @@ router.post('/logout', (req, res) => {
 })
 
 // delete user
-router.post('/delete', isLoggedIn, (req, res) => {
-    userModel.findByIdAndDelete(req.session.userId)
+router.post('/delete', isLoggedIn, async (req, res) => {
+    await userModel.findByIdAndDelete(req.session.userId)
     req.session.destroy
     res.clearCookie('auth')
     res.redirect('/')

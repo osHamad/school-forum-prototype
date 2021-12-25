@@ -1,5 +1,6 @@
 // require dependencies
 const express = require('express')
+const session = require('express-session')
 const mongoose = require('mongoose')
 
 // require routes for making requests
@@ -11,9 +12,24 @@ const userRouter = require('./routes/user')
 require('dotenv').config()
 const PORT = process.env.PORT
 const URI = process.env.URI
+const SESSION_SECRET = process.env.SESSION_SECRET
 
 // create app
 const app = express()
+
+// initialize session for user
+app.use(session(
+    {
+        name: 'auth',
+        secret: SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        cookie: 
+        {
+            // specify cookie options
+        }
+    }
+))
 
 // setup view engine
 app.set('view engine', 'ejs')
