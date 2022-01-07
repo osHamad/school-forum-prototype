@@ -14,7 +14,7 @@ const router = express.Router()
 // GET requests
 // get user login/register page
 router.get('/login', (req, res) => {
-    res.render('login')
+    res.render('login', {error:{message:''}})
 })
 
 // get all users
@@ -26,7 +26,7 @@ router.get('/leaderboard', async (req, res) => {
 // view specific user profile
 router.get('/profile/:user', async (req, res) => {
     user = await userModel.findById(req.params.user)
-    if (!user) return res.send('user does not exist')
+    if (!user) return res.render('errors/404')
     const info = {
         name:user.userInfo.name,
         grade:user.userInfo.grade,
@@ -44,7 +44,24 @@ router.get('/profile/:user', async (req, res) => {
 // view specific user profile
 router.get('/profile', isLoggedIn, async (req, res) => {
     user = await userModel.findById(req.session.userId)
-    res.json(user)
+    const display = {
+        user: user.userInfo.name,
+        login: 'Logout',
+        loginAction: '/user/logout',
+        loginMethod: 'post'
+    }
+    const info = {
+        name:user.userInfo.name,
+        grade:user.userInfo.grade,
+        dateJoined:user.userInfo.dateCreated,
+    }
+    const stats = {
+        points:user.userStats.points,
+        asked:user.userStats.asked,
+        answered:user.userStats.answered,
+        verified:user.userStats.verified
+    }
+    res.render('profile', {info:info, stats:stats, display:display})
 })
 
 //POST requests
@@ -87,17 +104,17 @@ router.post('/register', async (req, res) => {
 router.post('/login', (req, res) => {
     const userEmail = req.body.email
     const userPassword = req.body.password
-    if (!userEmail) return res.send('please enter email')
-    if (!userPassword) return res.send('please enter password')
 
     userModel.findOne (
         { "userInfo.email": userEmail },
         async (err, user) => {
             if (err) return res.status(500).render('errors/500')
-            if (user === null) return res.send('email not registered')
+            if (user === null) return res.render('login', { error: { message: 'email not registered' } })
             if (await bcrypt.compare(userPassword, user.userInfo.password)) {
                 req.session.userId = user._id
-                res.redirect('/')
+                res.redirect('/questions')
+            } else {
+                return res.render('login', { error: { message: 'incorrect password' } })
             }
         }
     )

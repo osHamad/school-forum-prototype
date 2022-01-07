@@ -38,7 +38,7 @@ app.set('views', __dirname+'/views')
 // application usages
 app.use(express.static(__dirname + '/static'))      // allow static files for views
 app.use(express.json())     // middleware to parse json
-app.use(express.urlencoded({extended: true}))
+app.use(express.urlencoded( {extended: true} ))
 
 // use routes to make requests
 app.use('/questions', questionRouter)
@@ -52,7 +52,7 @@ app.get('/', async (req, res)=>{
 
 // request for any page that does not exist (404 error)
 app.get('*', async (req, res)=>{
-    res.send('page does not exist')
+    res.render('errors/404')
 })
 
 // connect to db then listen on port

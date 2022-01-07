@@ -10,8 +10,28 @@ const { isLoggedIn, belongsToOwner } = require('../helpers/middleware')
 // GET requests
 // get all questions
 router.get('/', async (req, res) => {
-    const questions = await questionModel.find().sort({ createdAt: 'desc' })
-    res.render('index', {questions:questions})
+    const date = req.query.date == "Date" || req.query.date == undefined ? 'desc' : req.query.date
+    const category = req.query.category == undefined ||  req.query.category == 'Category' ? undefined : { 'questionBody.category': req.query.category }
+    const grade = req.query.grade == "Grade" ? undefined : { 'userInfo.userGrade': req.query.grade }
+    const questions = await questionModel.find(category).sort({ 'questionInfo.dateAsked': date })
+    let display
+    if (req.session.userId) {
+        const user = await userModel.findById(req.session.userId)
+        display = {
+            user: user.userInfo.name,
+            login: 'Logout',
+            loginAction: '/user/logout',
+            loginMethod: 'post'
+        }
+    } else {
+        display = {
+            user: 'Not Logged In',
+            login: 'Login',
+            loginAction: '/user/login',
+            loginMethod: 'get'
+        }
+    }
+    res.render('index', {questions:questions, display:display})
 })
 
 // get one specific question by id
@@ -21,7 +41,7 @@ router.get('/:id', async (req, res) => {
         const answers = await answerModel.find().where('_id').in(question.questionBody.answers).exec()
         res.render('question', {question:question, answers:answers})
     } catch {
-        res.send('404: page not found')
+        res.render('errors/404')
     }
 })
 
