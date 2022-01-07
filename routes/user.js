@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt')
 
 // require mongoose schema models
 const userModel = require('../models/user.model')
+const questionModel = require('../models/question.model')
+const answerModel = require('../models/answer.model')
 
 // require middleware
 const { isLoggedIn } = require('../helpers/middleware')
@@ -61,7 +63,11 @@ router.get('/profile', isLoggedIn, async (req, res) => {
         answered:user.userStats.answered,
         verified:user.userStats.verified
     }
-    res.render('profile', {info:info, stats:stats, display:display})
+    const qna = {
+        questions: await questionModel.find().where('_id').in(user.userContent.questionsId).exec(),
+        answers: await answerModel.find().where('_id').in(user.userContent.answersId).exec()
+    }
+    res.render('profile', {info:info, stats:stats, display:display, qna:qna})
 })
 
 //POST requests

@@ -38,6 +38,9 @@ router.post('/:id', isLoggedIn, async (req, res)=>{
     console.log(answer._id)
     question.questionBody.answers.push(answer._id)
     question.save()
+    user.userContent.answersId.push(answer._id)
+    user.userStats.answered += 1
+    user.save()
     res.redirect('/questions/'+req.params.id)
 })
 

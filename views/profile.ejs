@@ -74,58 +74,80 @@
             </div>
             <div id="layoutSidenav_content">
                 <main>
-                    <div class="col card mt-10 mb-10">
-                        <div class="card-body text-center">
-                            <h1><%=info.name%></h1>
-                        </div>
-                        <div class="card-footer">
-                            <div class="row text-muted">
-                                <div class="col text-center"><h4>Grade <%=info.grade%></h4></div>
-                                <div class="col text-center"><h4>Joined on <%=info.dateJoined.toDateString()%></h4></div>
-                                <div class="col text-center"><h4><%=stats.points%> Points</h4></div>
+                    
+                    <div class="container-fluid px-4">
+                        <div class="card mb-5 mt-3 border-dark">
+                            <div class="card-body text-center">
+                                <h1><%=info.name%></h1>
+                            </div>
+                            <div class="card-footer">
+                                <div class="row text-muted">
+                                    <div class="text-center col-md-4 mb-2"><h5>Grade <%=info.grade%></h5></div>
+                                    <div class="text-center col-md-4 mb-2"><h5>Joined on <%=info.dateJoined.toDateString()%></h5></div>
+                                    <div class="text-center col-md-4 mb-2"><h5><%=stats.points%> Points</h5></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="container px-4">
-                            
-                        <div class="row justify-content-evenly">
-                            <div class="col card text-white bg-success mb-3 text-center" style="max-width: 18rem;">
+                        <div class="row justify-content-evenly mb-5">
+                            <div class="col-md-4">
+                                <div class="card text-white bg-success mb-3 text-center">
                                 <div class="card-header"><h4>Questions Asked</h4></div>
                                 <div class="card-body">
                                   <h1 class="card-text"><%=stats.asked%></h1>
                                 </div>
                             </div>
-                            <div class="col card text-white bg-primary mb-3 text-center" style="max-width: 18rem;">
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card text-white bg-primary mb-3 text-center">
                                 <div class="card-header"><h4>Questions Answered</h4></div>
                                 <div class="card-body">
                                   <h1 class="card-text"><%=stats.answered%></h1>
                                 </div>
                             </div>
-                            <div class="col card text-white bg-danger mb-3 text-center" style="max-width: 18rem;">
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="card text-white bg-danger mb-3 text-center">
                                 <div class="card-header"><h4>Answers Verified</h4></div>
                                 <div class="card-body">
                                   <h1 class="card-text"><%=stats.verified%></h1>
                                 </div>
                             </div>
+                            </div>
+                            
                         </div>
-                        
-                    </div>
-                    <div class="container">
-                        <div class="row justify-content-between">
-                        <div class="col card text-dark border-primary mb-3 text-center">
-                            <div class="card-header"><h4>Questions</h4></div>
-                            <div class="card-body">
-                              <h1 class="card-text"><%=stats.answered%></h1>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                              <div class="card border-primary mb-2">
+                                <div class="card-header"><h4>Top Questions</h4></div>
+                                <div class="card-body">
+                                    <% qna.questions.forEach(question => { %>
+                                        <div class="card mb-1">
+                                            <div class="card-body">
+                                                <p><%=question.questionBody.title%></p>
+                                            </div>
+                                        </div>
+                                    <% }) %>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-primary">
+                                <div class="card-header"><h4>Top Answers</h4></div>
+                                <div class="card-body">
+                                    <% qna.answers.forEach(answer => { %>
+                                        <div class="card mb-1">
+                                            <div class="card-body">
+                                                <p><%=answer.answerBody.details%></p>
+                                            </div>
+                                        </div>
+                                    <% }) %>
+                                </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col card text-dark border-primary mb-3 text-center">
-                            <div class="card-header"><h4>Answers</h4></div>
-                            <div class="card-body">
-                              <h1 class="card-text"><%=stats.verified%></h1>
-                            </div>
-                        </div>
                     </div>
-                    </div>
+                    
                     
                 </main>
                 <footer class="py-4 bg-light mt-auto">
