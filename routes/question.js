@@ -36,10 +36,27 @@ router.get('/', async (req, res) => {
 
 // get one specific question by id
 router.get('/:id', async (req, res) => {
+    let display
+    if (req.session.userId) {
+        const user = await userModel.findById(req.session.userId)
+        display = {
+            user: user.userInfo.name,
+            login: 'Logout',
+            loginAction: '/user/logout',
+            loginMethod: 'post'
+        }
+    } else {
+        display = {
+            user: 'Not Logged In',
+            login: 'Login',
+            loginAction: '/user/login',
+            loginMethod: 'get'
+        }
+    }
     try {
         const question = await questionModel.findById(req.params.id)
-        const answers = await answerModel.find().where('_id').in(question.questionBody.answers).exec()
-        res.render('question', {question:question, answers:answers})
+        const answers = await answerModel.find().sort({'answerInfo.isVerified': 'desc'}).where('_id').in(question.questionBody.answers).exec()
+        res.render('question', {question:question, answers:answers, display:display})
     } catch {
         res.render('errors/404')
     }
@@ -82,6 +99,7 @@ router.post('/new', isLoggedIn, async (req, res) => {
             return res.status(500).render('errors/500')
         }
         user.userContent.questionsId.push(question._id)
+        user.userStats.points += 5
         user.userStats.asked += 1
         user.save()
         res.redirect('/questions')

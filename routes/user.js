@@ -21,8 +21,24 @@ router.get('/login', (req, res) => {
 
 // get all users
 router.get('/leaderboard', async (req, res) => {
-    const allUsers = await userModel.find()
-    res.send(allUsers)
+    const users = await userModel.find().sort({'userStats.points': 'desc'})
+    if (req.session.userId) {
+        const user = await userModel.findById(req.session.userId)
+        display = {
+            user: user.userInfo.name,
+            login: 'Logout',
+            loginAction: '/user/logout',
+            loginMethod: 'post'
+        }
+    } else {
+        display = {
+            user: 'Not Logged In',
+            login: 'Login',
+            loginAction: '/user/login',
+            loginMethod: 'get'
+        }
+    }
+    res.render('leaderboard', {display:display, users:users})
 })
 
 // view specific user profile
@@ -40,7 +56,27 @@ router.get('/profile/:user', async (req, res) => {
         answered:user.userStats.answered,
         verified:user.userStats.verified
     }
-    res.render('profile', {info:info, stats:stats})
+    const qna = {
+        questions: await questionModel.find().sort({ 'questionInfo.dateAsked': 'desc' }).where('_id').in(user.userContent.questionsId).exec(),
+        answers: await answerModel.find().where('_id').in(user.userContent.answersId).exec()
+    }
+    if (req.session.userId) {
+        const user = await userModel.findById(req.session.userId)
+        display = {
+            user: user.userInfo.name,
+            login: 'Logout',
+            loginAction: '/user/logout',
+            loginMethod: 'post'
+        }
+    } else {
+        display = {
+            user: 'Not Logged In',
+            login: 'Login',
+            loginAction: '/user/login',
+            loginMethod: 'get'
+        }
+    }
+    res.render('profile', {info:info, stats:stats, display:display, qna:qna})
 })
 
 // view specific user profile
@@ -64,7 +100,7 @@ router.get('/profile', isLoggedIn, async (req, res) => {
         verified:user.userStats.verified
     }
     const qna = {
-        questions: await questionModel.find().where('_id').in(user.userContent.questionsId).exec(),
+        questions: await questionModel.find().sort({ 'questionInfo.dateAsked': 'desc' }).where('_id').in(user.userContent.questionsId).exec(),
         answers: await answerModel.find().where('_id').in(user.userContent.answersId).exec()
     }
     res.render('profile', {info:info, stats:stats, display:display, qna:qna})

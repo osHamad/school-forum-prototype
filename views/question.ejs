@@ -1,46 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="http://localhost:5000/css/styles.css" rel="stylesheet" />
-    <title>Document</title>
-</head>
-<body>
-    <h1><%=question.questionBody.title%></h1>
-    <h3><%=question.questionBody.category%></h3>
-    <hr>
-    <p><%=question.questionBody.details%></p>
-    <hr>
-    <% answers.forEach(answer => { %>
-        <h1><%=answer.userInfo.userName%></h1>
-        <h4><%=answer.answerBody.details%></h4>
-        <h4><%=answer.answerInfo.dateAnswered%></h4>
-        <hr>
-    <% }) %>
-
-    <h1>put answer here</h1>
-
-
-    <form action="/answer/<%=question._id%>" method="POST">
-        <p>insert answer here</p>
-        <input type="text" name="details" id="details">
-        <button type="submit">submit answer</button>
-    </form>
-
-    <hr>
-    
-
-    <script>
-        function postData(url = window.location.pathname + '/answer'){
-            const data = {title: document.getElementById('title-f').value}
-            fetch(url, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data)
-            })
-        }
-    </script>
-</body>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <link href="/css/styles.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+        <title><%=question.questionBody.title%></title>
+    </head>
+    <body class="sb-nav-fixed">
+        <%-include("./components/_topNav.ejs")%>
+        <div id="layoutSidenav">
+            <%-include('./components/_sideNav.ejs')%>
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4 mb-3 text-break"><%=question.questionBody.title%></h1>
+                        <h5 class="text-muted mb-5"><%=question.questionBody.category%></h5>
+                        <p class="bg-light p-2 rounded text-break"><%=question.questionBody.details%></p>
+                        <hr>
+                        <a class="btn btn-outline-success border-2 mb-3" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            Answer Question
+                        </a>
+                        <div class="collapse mb-3" id="collapseExample">
+                            <div class="card card-body">
+                                <form class="needs-validation" action="/answer/<%=question._id%>" method="post">
+                                    <div class="mb-3 text-muted">
+                                        <p>(Make sure you are logged in when answering a question)</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="details" class="form-label">Answer</label>
+                                        <textarea class="form-control" id="details" rows="5" name="details" maxlength="1500" required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary me-2">Submit</button>
+                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Cancel</button>
+                                </form>
+                            </div>
+                        </div>
+                        <% answers.forEach(answer => { %>
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <p class="d-inline-block text-muted">Answer by <a href="/user/profile/<%=answer.userInfo.userId%>"><%=answer.userInfo.userName%></a></p>
+                                    <p class="d-inline-block">•</p>
+                                    <p class="d-inline-block text-muted"><%=answer.answerInfo.dateAnswered.toLocaleString()%></p>
+                                </div>
+                                <div class="card-body row m-0 justify-content-between">
+                                    <% if(answer.answerInfo.isVerified){ %>
+                                        <div class="col-1 mb-auto mt-auto">
+                                            <span class="fa-layers">
+                                                <i class="fas fa-check fa-3x primary" style="color: green;"></i>
+                                            </span>
+                                        </div>
+                                    <% } else { %>
+                                        <div class="col-1 mb-auto mt-auto overflow-auto">
+                                            <i class="fas fa-circle fa-3x" style="color: orange;"></i>
+                                        </div>
+                                    <% } %>
+                                    <div class="col-10">
+                                        <h3 class="card-title"><%=answer.answerBody.details%></h3>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                </main>
+                <%-include('./components/_pageBottom')%>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+        <script>
+            function postData(url = window.location.pathname + '/answer'){
+                const data = {title: document.getElementById('title-f').value}
+                fetch(url, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                })
+            }
+        </script>
+    </body>
 </html>
