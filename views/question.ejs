@@ -16,9 +16,10 @@
                 <main>
                     <div class="container-fluid px-4">
                         <h1 class="mt-4 mb-3 text-break"><%=question.questionBody.title%></h1>
-                        <h5 class="text-muted mb-5"><%=question.questionBody.category%></h5>
-                        <p class="bg-light p-2 rounded text-break"><%=question.questionBody.details%></p>
                         <hr>
+                        <h5 class="mb-2"><%=question.questionInfo.dateAsked.toLocaleString()%></h5>
+                        <h5 class="text-muted mb-5"><%=question.questionBody.category%></h5>
+                        <p class="bg-light p-2 rounded text-break fs-5"><%=question.questionBody.details%></p>
                         <a class="btn btn-outline-success border-2 mb-3" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                             Answer Question
                         </a>
@@ -45,21 +46,16 @@
                                     <p class="d-inline-block text-muted"><%=answer.answerInfo.dateAnswered.toLocaleString()%></p>
                                 </div>
                                 <div class="card-body row m-0 justify-content-between">
+                                    <div class="col-10">
+                                        <h3 class="card-title"><%=answer.answerBody.details%></h3>
+                                    </div>
                                     <% if(answer.answerInfo.isVerified){ %>
-                                        <div class="col-1 mb-auto mt-auto">
+                                        <div class="col-2 mb-auto mt-auto">
                                             <span class="fa-layers">
                                                 <i class="fas fa-check fa-3x primary" style="color: green;"></i>
                                             </span>
                                         </div>
-                                    <% } else { %>
-                                        <div class="col-1 mb-auto mt-auto overflow-auto">
-                                            <i class="fas fa-circle fa-3x" style="color: orange;"></i>
-                                        </div>
                                     <% } %>
-                                    <div class="col-10">
-                                        <h3 class="card-title"><%=answer.answerBody.details%></h3>
-                                    </div>
-                                    
                                 </div>
                             </div>
                         <% }) %>

@@ -47,6 +47,7 @@
                                         <div class="small"><a href="javascript:void(0)" onclick="toRegister()">Need an account? Sign up!</a></div>
                                     </div>
                                 </div>
+
                                 <div class="card shadow-lg border-0 rounded-lg mt-5 d-none" id="register">
                                     <div class="card-header"><h3 class="text-center font-weight-light my-4">Register</h3></div>
                                     <div class="card-body">
@@ -59,22 +60,51 @@
                                             </div>
                                           <% } %>
                                         <form action="/user/login" method="post">
-                                            <div class="form-floating mb-3">
-                                                <input name="email" class="form-control" id="inputEmail" type="email" placeholder="name@example.com" required />
-                                                <label for="inputEmail">Email address</label>
+                                            
+                                            <div class="form-floating mb-3 input-group">
+                                                
+                                                <input name="password" class="form-control" id="inputPassword" type="text" placeholder="Password" required/>
+                                                
+                                                
+                                                <span class="input-group-text">@stu.ocsb.ca</span>
+                                                <label for="inputPassword">Email Address</label>
                                             </div>
+                                            <div class="row mb-3">
+                                                <div class="col ">
+                                                    <div class="form-floating">
+                                                        <input name="firstName" class="form-control" id="firstName" type="text" placeholder="Password" required/>
+                                                        <label for="firstName">First Name</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col ">
+                                                    <div class="form-floating">
+                                                        <input name="password" class="form-control" id="inputPassword" type="text" placeholder="Password" required/>
+                                                        <label for="inputPassword">Last Name</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <select class="form-select mb-3" aria-label="Default select example">
+                                                <option selected>Grade</option>
+                                                <option value="1">9</option>
+                                                <option value="2">10</option>
+                                                <option value="3">11</option>
+                                                <option value="3">12</option>
+                                              </select>
                                             <div class="form-floating mb-3">
                                                 <input name="password" class="form-control" id="inputPassword" type="password" placeholder="Password" required/>
                                                 <label for="inputPassword">Password</label>
                                             </div>
+                                            <div class="form-floating mb-3">
+                                                <input name="password" class="form-control" id="inputPassword" type="password" placeholder="Password" required/>
+                                                <label for="inputPassword">Re-enter Password</label>
+                                            </div>
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <a class="small" href="password.html">Forgot Password?</a>
-                                                <button class="btn btn-primary" type="submit">Login</button>
+                                                <button class="btn btn-primary" type="submit">Register</button>
                                             </div>
                                         </form>
                                     </div>
                                     <div class="card-footer text-center py-3">
-                                        <div class="small"><a href="javascript:void(0)" onclick="toRegister()">Need an account? Sign up!</a></div>
+                                        <div class="small"><a href="javascript:void(0)" onclick="toLogin()">Already have an account? Login!</a></div>
                                     </div>
                                 </div>
                             </div>
@@ -91,9 +121,16 @@
         <script>
             function toRegister() {
                 const sectionLog = document.getElementById('login')
-                sectionLog.style.display = 'none'
+                sectionLog.classList.add('d-none')
                 const sectionReg = document.getElementById('register')
-                sectionReg.style.display = 'inline-block'
+                sectionReg.classList.remove('d-none')
+            }
+
+            function toLogin() {
+                const sectionReg = document.getElementById('register')
+                sectionReg.classList.add('d-none')
+                const sectionLog = document.getElementById('login')
+                sectionLog.classList.remove('d-none')
             }
         </script>
     </body>
