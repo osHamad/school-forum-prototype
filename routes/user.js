@@ -110,16 +110,16 @@ router.get('/profile', isLoggedIn, async (req, res) => {
 // create a user
 router.post('/register', async (req, res) => {
     try {
-        const securedPassword = await bcrypt.hash(req.body.password, 10)
+        if (req.body.password != req.body.passwordRe) return res.send('password do not match')
         const user = new userModel (
             {
                 userInfo:
                 {
-                    name: req.body.name,
+                    name: req.body.firstName + ' ' + req.body.lastName,
         
-                    email: req.body.email,
+                    email: req.body.email + '@stu.ocsb.ca',
         
-                    password: securedPassword,
+                    password: await bcrypt.hash(req.body.password, 10),
         
                     grade: req.body.grade,
 

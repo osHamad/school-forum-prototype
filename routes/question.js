@@ -5,7 +5,7 @@ const questionModel = require('../models/question.model')
 const userModel = require('../models/user.model')
 const answerModel = require('../models/answer.model')
 
-const { isLoggedIn, belongsToOwner } = require('../helpers/middleware')
+const { isLoggedIn, questionBelongsToOwner } = require('../helpers/middleware')
 
 // GET requests
 // get all questions
@@ -114,7 +114,7 @@ router.post('/:id/edit', isLoggedIn, (req, res) => {
 })
 
 // delete question
-router.post('/:id/delete', isLoggedIn, belongsToOwner, async (req, res) => {
+router.post('/:id/delete', isLoggedIn, questionBelongsToOwner, async (req, res) => {
     await questionModel.findByIdAndDelete(req.params.id)
     res.send('deleted')
 })

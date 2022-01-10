@@ -9,9 +9,9 @@ module.exports = {
         next()
     },
 
-    belongsToOwner: async (req, res, next) => {
+    questionBelongsToOwner: async (req, res, next) => {
         const question = await questionModel.findById(req.params.id)
-        if (req.session.userId != question.userInfo.userId) return res.render('401: no access')
+        if (req.session.userId != question.userInfo.userId) return res.render('401')
         next()
     }
 }

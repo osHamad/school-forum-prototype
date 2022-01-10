@@ -5,7 +5,12 @@ const questionModel = require('../models/question.model')
 const answerModel = require('../models/answer.model')
 const userModel = require('../models/user.model')
 
-const { isLoggedIn } = require('../helpers/middleware')
+const { isLoggedIn, questionBelongsToOwner } = require('../helpers/middleware')
+
+router.get('/', async (req, res) => {
+    const allanswer = await answerModel.find()
+    res.send(allanswer)
+})
 
 // POST requests
 // answer a specific question
@@ -45,14 +50,21 @@ router.post('/:id', isLoggedIn, async (req, res)=>{
     res.redirect('/questions/'+req.params.id)
 })
 
-// edit an answer
-router.post('/:id', async (req, res)=>{
-    
+// verify answer
+router.post('/verify/:id', isLoggedIn, questionBelongsToOwner, async (req, res) => {
+    const answer = await answerModel.findById(req.params.id)
+    answer.answerInfo.isVerified = true
+    answer.save()
 })
 
-// delete an answer
-router.post('/:id', async (req, res)=>{
+// // edit an answer
+// router.post('/:id', async (req, res)=>{
     
-})
+// })
+
+// // delete an answer
+// router.post('/:id', async (req, res)=>{
+    
+// })
 
 module.exports = router
