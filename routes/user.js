@@ -110,7 +110,7 @@ router.get('/profile', isLoggedIn, async (req, res) => {
 // create a user
 router.post('/register', async (req, res) => {
     try {
-        if (req.body.password != req.body.passwordRe) return res.send('password do not match')
+        if (req.body.password != req.body.passwordRe) return res.render('login', {error:{message:'Passwords do not match'}})
         const user = new userModel (
             {
                 userInfo:
@@ -133,7 +133,7 @@ router.post('/register', async (req, res) => {
                 console.log(e)
                 return res.status(500).render('errors/500')
             }
-            res.render('login')
+            res.render('login', {error:{message:''}})
         })
 
     } catch (e) {
