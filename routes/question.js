@@ -56,7 +56,7 @@ router.get('/:id', async (req, res) => {
     try {
         const question = await questionModel.findById(req.params.id)
         const answers = await answerModel.find().sort({'answerInfo.isVerified': 'desc'}).where('_id').in(question.questionBody.answers).exec()
-        res.render('question', {question:question, answers:answers, display:display})
+        res.render('question', {question:question, answers:answers, display:display, isOwner:req.session.userId==question.userInfo.userId})
     } catch {
         res.render('errors/404')
     }

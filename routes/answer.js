@@ -55,6 +55,23 @@ router.post('/verify/:id', isLoggedIn, questionBelongsToOwner, async (req, res) 
     const answer = await answerModel.findById(req.params.id)
     answer.answerInfo.isVerified = true
     answer.save()
+    const user = await userModel.findById(answer.userInfo.userId)
+    user.userStats.points += 15
+    user.userStats.verified ++
+    user.save()
+    res.redirect('/questions/'+answer.answerInfo.parentQuestion)
+})
+
+// verify answer
+router.post('/unverify/:id', isLoggedIn, questionBelongsToOwner, async (req, res) => {
+    const answer = await answerModel.findById(req.params.id)
+    answer.answerInfo.isVerified = false
+    answer.save()
+    const user = await userModel.findById(answer.userInfo.userId)
+    user.userStats.points -= 15
+    user.userStats.verified --
+    user.save()
+    res.redirect('/questions/'+answer.answerInfo.parentQuestion)
 })
 
 // // edit an answer

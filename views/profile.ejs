@@ -91,6 +91,11 @@
                                                         <p><%=answer.answerInfo.dateAnswered.toDateString()%></p>
                                                     </div>
                                                     <div class="overflow-hidden text-nowrap fw-bold"><h6><%=answer.answerBody.details%></h6></div>
+                                                    <div>
+                                                        <% if (answer.answerInfo.isVerified) { %>
+                                                            <i class="fas fa-check" style="color: green;"></i>
+                                                        <% } %>
+                                                    </div>
                                                 </div>
                                             </div>
                                             </a>

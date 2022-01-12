@@ -133,7 +133,7 @@ router.post('/register', async (req, res) => {
                 console.log(e)
                 return res.status(500).render('errors/500')
             }
-            res.send('new user added:'+req.body.email)
+            res.render('login')
         })
 
     } catch (e) {

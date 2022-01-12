@@ -1,4 +1,5 @@
 const questionModel = require('../models/question.model')
+const answerModel = require('../models/answer.model')
 
 module.exports = {
 
@@ -10,8 +11,9 @@ module.exports = {
     },
 
     questionBelongsToOwner: async (req, res, next) => {
-        const question = await questionModel.findById(req.params.id)
-        if (req.session.userId != question.userInfo.userId) return res.render('401')
+        const answer = await answerModel.findById(req.params.id)
+        const question = await questionModel.findById(answer.answerInfo.parentQuestion)
+        if (req.session.userId != question.userInfo.userId) return res.render('errors/401')
         next()
     }
 }

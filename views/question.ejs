@@ -17,7 +17,7 @@
                     <div class="container-fluid px-4">
                         <h1 class="mt-4 mb-3 text-break"><%=question.questionBody.title%></h1>
                         <hr>
-                        <h5 class="mb-2"><%=question.questionInfo.dateAsked.toLocaleString()%></h5>
+                        <h5 class="mb-2">Asked by <a href="/user/profile/<%=question.userInfo.userId%>"><%=question.userInfo.userName%></a> on <%=question.questionInfo.dateAsked.toLocaleString()%></h5>
                         <h5 class="text-muted mb-5"><%=question.questionBody.category%></h5>
                         <p class="bg-light p-2 rounded text-break fs-5"><%=question.questionBody.details%></p>
                         <a class="btn btn-outline-success border-2 mb-3" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -49,13 +49,31 @@
                                     <div class="col-10">
                                         <h3 class="card-title"><%=answer.answerBody.details%></h3>
                                     </div>
-                                    <% if(answer.answerInfo.isVerified){ %>
+                                    <% if(isOwner) { %>
+                                        <% if(!answer.answerInfo.isVerified) { %>
+                                            <div class="col-md-2 mb-auto mt-auto">
+                                                <form action="/answer/verify/<%=answer._id%>" method="post">
+                                                    <button class="btn btn-success" type="submit">
+                                                    Verify Answer
+                                                </button>
+                                                </form>
+                                                
+                                            </div>
+                                        <% } else { %>
+                                            <div class="col-md-2 mb-auto mt-auto">
+                                                <button class="btn btn-secondary">
+                                                    Unverify Answer
+                                                </button>
+                                            </div>
+                                        <% } %>
+                                    <% } else if (answer.answerInfo.isVerified) { %>
                                         <div class="col-2 mb-auto mt-auto">
                                             <span class="fa-layers">
                                                 <i class="fas fa-check fa-3x primary" style="color: green;"></i>
                                             </span>
                                         </div>
                                     <% } %>
+                                    
                                 </div>
                             </div>
                         <% }) %>
