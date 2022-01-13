@@ -24,20 +24,21 @@
                                 <form action="/questions" method="get">
                                     <div class="row justify-content-center">
                                 <select class="btn btn-light col-12 col-md-2 m-2 mb-3" aria-label="Default select example" name="date">
-                                <option selected>Date</option>
+                                <option class="text-muted mt-3" selected hidden disabled>Date</option>
                                 <option value="asc">Oldest</option>
                                 <option value="desc">Newest</option>
                               </select>
                               <select class="btn btn-light col-12 col-md-2 m-2 mb-3" aria-label="Default select example" name="category">
-                                <option selected>Category</option>
+                                <option class="text-muted mt-3" selected hidden disabled>Category</option>
                                 <option value="Science">Science</option>
-                                <option value="Biology">biology</option>
+                                <option value="Biology">Biology</option>
                                 <option value="Chemisty">Chemistry</option>
                                 <option value="Physics">Physics</option>
                                 <option value="Math">Math</option>
+                                
                               </select>
                               <select class="btn btn-light col-12 col-md-2 m-2 mb-3" aria-label="Default select example" name="grade">
-                                <option selected>Grade</option>
+                                <option class="text-muted mt-3" selected hidden disabled>Grade</option>
                                 <option value="9">9</option>
                                 <option value="10">10</option>
                                 <option value="11">11</option>
@@ -87,6 +88,9 @@
                                 </form>
                             </div>
                         </div>
+                        <% if(questions.length==0) {%>
+                            <h1>No results found</h1>
+                        <%} else {%>
                         <% questions.forEach(question => { %>
                             <a class="a-no-style" href="/questions/<%=question._id%>">
                                 <div class="card mb-4">
@@ -112,6 +116,7 @@
                                 </div>
                             </a>
                         <% }) %>
+                        <%}%>
                     </div>
                 </main>
                 <%-include('./components/_pageBottom.ejs')%>

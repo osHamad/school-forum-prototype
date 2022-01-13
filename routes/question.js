@@ -10,10 +10,11 @@ const { isLoggedIn, questionBelongsToOwner } = require('../helpers/middleware')
 // GET requests
 // get all questions
 router.get('/', async (req, res) => {
-    const date = req.query.date == "Date" || req.query.date == undefined ? 'desc' : req.query.date
-    const category = req.query.category == undefined ||  req.query.category == 'Category' ? undefined : { 'questionBody.category': req.query.category }
-    const grade = req.query.grade == "Grade" ? undefined : { 'userInfo.userGrade': req.query.grade }
-    const questions = await questionModel.find(category).sort({ 'questionInfo.dateAsked': date })
+    const thing = {}
+    const date = req.query.date || 'desc'
+    if (req.query.grade != undefined) thing['userInfo.userGrade'] = req.query.grade
+    if (req.query.category != undefined) thing['questionBody.category'] = req.query.category
+    const questions = await questionModel.find(thing).sort({ 'questionInfo.dateAsked': date })
     let display
     if (req.session.userId) {
         const user = await userModel.findById(req.session.userId)
