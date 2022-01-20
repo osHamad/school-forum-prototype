@@ -1,5 +1,6 @@
 const questionModel = require('../models/question.model')
 const answerModel = require('../models/answer.model')
+const userModel = require('../models/user.model')
 
 module.exports = {
 
@@ -21,4 +22,10 @@ module.exports = {
         if (req.session.userId) return res.redirect('/questions')
         next()
     },
+
+    isAdmin: async (req, res, next) => {
+        const user = await userModel.findById(req.session.userId)
+        if (user.userInfo.role != 'admin') return res.render('errors/401')
+        next()
+    }
 }
