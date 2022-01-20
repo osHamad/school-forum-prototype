@@ -11,7 +11,7 @@ const issuesRouter = require('./routes/issues')
 
 // configure env and setup env variables
 require('dotenv').config()
-const PORT = process.env.PORT || PORT
+const PORT = process.env.PORT
 const URI = process.env.URI
 const SESSION_SECRET = process.env.SESSION_SECRET
 
