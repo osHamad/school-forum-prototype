@@ -8,14 +8,31 @@ const questionModel = require('../models/question.model')
 const answerModel = require('../models/answer.model')
 
 // require middleware
-const { isLoggedIn } = require('../helpers/middleware')
+const { isLoggedIn, isLoggedOut } = require('../helpers/middleware')
 
 // create router
 const router = express.Router()
 
 // GET requests
+router.get('/edit', isLoggedIn, async (req, res) => {
+    const user = await userModel.findById(req.session.userId)
+    display = {
+        user: user.userInfo.name,
+        login: 'Logout',
+        loginAction: '/user/logout',
+        loginMethod: 'post'
+    }
+    
+    userInfo = {
+        name: user.userInfo.name.split(/(\s+)/),
+        grade: user.userInfo.grade,
+        email: user.userInfo.email.split('@')
+    }
+    res.render('editProfile', {display:display, userInfo:userInfo})
+})
+
 // get user login/register page
-router.get('/login', (req, res) => {
+router.get('/login', isLoggedOut, (req, res) => {
     res.render('login', {error:{message:''}})
 })
 
@@ -78,7 +95,6 @@ router.get('/profile/:user', async (req, res) => {
     }
     res.render('profile', {info:info, stats:stats, display:display, qna:qna})
 })
-
 // view specific user profile
 router.get('/profile', isLoggedIn, async (req, res) => {
     user = await userModel.findById(req.session.userId)
@@ -104,6 +120,7 @@ router.get('/profile', isLoggedIn, async (req, res) => {
         answers: await answerModel.find().where('_id').in(user.userContent.answersId).exec()
     }
     res.render('profile', {info:info, stats:stats, display:display, qna:qna})
+    
 })
 
 //POST requests
@@ -111,6 +128,7 @@ router.get('/profile', isLoggedIn, async (req, res) => {
 router.post('/register', async (req, res) => {
     try {
         if (req.body.password != req.body.passwordRe) return res.render('login', {error:{message:'Passwords do not match'}})
+        if (await userModel.findOne({'userInfo.email': req.body.email + '@stu.ocsb.ca'})) return res.render('login', {error:{message:'Email already registered'}})
         const user = new userModel (
             {
                 userInfo:
@@ -143,7 +161,7 @@ router.post('/register', async (req, res) => {
 })
 
 // sign in
-router.post('/login', (req, res) => {
+router.post('/login', isLoggedOut, (req, res) => {
     const userEmail = req.body.email
     const userPassword = req.body.password
 
@@ -169,14 +187,24 @@ router.post('/logout', (req, res) => {
     res.redirect('/')
 })
 
+
+
 // delete user
 router.post('/delete', isLoggedIn, async (req, res) => {
-    await userModel.findByIdAndDelete(req.session.userId)
+    await userModel.findByIdAndRemove(req.session.userId)
     req.session.destroy
     res.clearCookie('auth')
     res.redirect('/')
 })
 
 // edit user information
+router.post('/edit', isLoggedIn, async (req, res) => {
+    const user = await userModel.findById(req.session.userId)
+    user.userInfo.name = req.body.firstName + ' ' + req.body.lastName
+    user.userInfo.email = req.body.email + '@stu.ocsb.ca'
+    user.userInfo.grade = req.body.grade
+    user.save()
+    res.redirect('/user/profile')
+})
 
 module.exports = router

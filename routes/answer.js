@@ -40,7 +40,6 @@ router.post('/:id', isLoggedIn, async (req, res)=>{
         }
     )
     answer.save()
-    console.log(answer._id)
     question.questionBody.answers.push(answer._id)
     question.save()
     user.userContent.answersId.push(answer._id)

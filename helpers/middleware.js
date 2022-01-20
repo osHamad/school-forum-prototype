@@ -15,5 +15,10 @@ module.exports = {
         const question = await questionModel.findById(answer.answerInfo.parentQuestion)
         if (req.session.userId != question.userInfo.userId) return res.render('errors/401')
         next()
-    }
+    },
+
+    isLoggedOut: (req, res, next) => {
+        if (req.session.userId) return res.redirect('/questions')
+        next()
+    },
 }
