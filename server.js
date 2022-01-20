@@ -7,6 +7,7 @@ const mongoose = require('mongoose')
 const questionRouter = require('./routes/question')
 const answerRouter = require('./routes/answer')
 const userRouter = require('./routes/user')
+const issuesRouter = require('./routes/issues')
 
 // configure env and setup env variables
 require('dotenv').config()
@@ -44,6 +45,7 @@ app.use(express.urlencoded( {extended: true} ))
 app.use('/questions', questionRouter)
 app.use('/answer', answerRouter)
 app.use('/user', userRouter)
+app.use('/issues', issuesRouter)
 
 // request for homepage
 app.get('/', async (req, res)=>{
