@@ -61,9 +61,12 @@
                                             </div>
                                         <% } else { %>
                                             <div class="col-md-2 mb-auto mt-auto">
-                                                <button class="btn btn-secondary">
+                                                <form action="/answer/unverify/<%=answer._id%>" method="post">
+                                                    <button class="btn btn-secondary">
                                                     Unverify Answer
                                                 </button>
+                                                </form>
+                                                
                                             </div>
                                         <% } %>
                                     <% } else if (answer.answerInfo.isVerified) { %>
